@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="qka\**" />
+    <Content Remove="qka\**" />
+    <EmbeddedResource Remove="qka\**" />
+    <None Remove="qka\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Data\Migrations\20190823075249_new2.cs" />
     <Compile Remove="Data\Migrations\20190823075249_new2.Designer.cs" />
     <Compile Remove="Data\Migrations\20190829122416_ExtendApplicatonUser.cs" />
