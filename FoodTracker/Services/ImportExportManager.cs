@@ -11,8 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
 namespace FoodTracker.Models
-{
-	
+{	
 	public class ImportExportManager : IDataManager
 	{
 		private readonly IHostingEnvironment env;
