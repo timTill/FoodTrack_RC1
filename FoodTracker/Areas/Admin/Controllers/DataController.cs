@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using FoodTracker.Extensions;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
+using System.Security.Claims;
 
 namespace FoodTracker.Areas.Admin.Controllers
 {
@@ -49,6 +50,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 		public IActionResult Import()
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			SD.userGUID = claim.Value;
 			ImpExpMan.ImportXML();
 			return RedirectToAction("Index", "Home", new { area = "User" });
 

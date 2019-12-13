@@ -231,7 +231,8 @@ namespace FoodTracker.Models
 										  BestBefore = string.IsNullOrEmpty((string)f.Element("BestBefore")) ? (DateTime?)null : (DateTime)f.Element("BestBefore"),
 										  Unit = (int)f.Element("Unit"),
 										  QuantityLeft = Enum.Parse<QuantityLeft>((string)f.Element("QuanityLeft")),
-										  Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement"))
+										  Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement")),
+										  OwnerName = SD.userGUID
 									  };
 
 			DB_VM.Categories = categories;

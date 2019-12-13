@@ -9,6 +9,8 @@ using FoodTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using FoodTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using FoodTracker.Utility;
 
 namespace FoodTracker.Controllers
 {
@@ -19,20 +21,29 @@ namespace FoodTracker.Controllers
 		private readonly ApplicationDbContext _db;
 		public HomeController(ApplicationDbContext db)
 		{
-			_db = db;
+			_db = db;			
+		}
+
+		public string GetCurrentUserGUID()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var userGUID = claim.Value;
+			return userGUID;
 		}
 
 		public async Task<IActionResult> Index()
 		{
+			string UserGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
 				//FoodItem = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync(),
-				FoodItem = await _db.Foods.Where(m => m.QuantityLeft != 0).Include(m => m.Category).
+				FoodItem = await _db.Foods.Where(m => m.QuantityLeft != 0 && m.OwnerName == UserGUID).Include(m => m.Category).
 				Include(m => m.SubCategory).ToListAsync(),
 				Category = await _db.Category.ToListAsync(),
 			};
 			return View(IndexVM);
-		}				
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
@@ -72,7 +83,7 @@ namespace FoodTracker.Controllers
 			return View(food);
 		}
 
-		
+
 		[HttpPost]
 		public async Task<IActionResult> UpdateStock(Food food)
 		{

@@ -14,6 +14,10 @@ namespace FoodTracker.Utility
 		public const string XMLinPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\DataToImport.xml";
 		//public const string XMlAfterNormPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\Data_out.xml";
 		public const string constr = "Data Source = localhost\\SZABSQL;Initial Catalog = FT_TestImpExp_Serv; Persist Security Info=True;User ID = szabi; Password=sqlpassword";
-
+		public const string ownerEmail = "ownerFT@gmail.com";
+		public const string ownerpw = "Tesztellek1*";
+		public const string endUserEmail = "enduser@gmail.com";
+		public const string endUserPw = "Tesztellek1*";		
+		public static string userGUID;
 	}
 }

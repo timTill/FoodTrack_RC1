@@ -25,8 +25,8 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark border-bottom box-shadow mb-3 ">
-			<div class="container justify-content-start justify-content-md-center">
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark border-bottom box-shadow">
+			<div class="container justify-content-start justify-content-md-center p-0">
 				<a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index"></a>
 				<button class="navbar-toggler float-sm-left" type="button"
 						data-toggle="collapse"
@@ -42,29 +42,15 @@
 						{
 							<li>
 								<a class="nav-link" role="button" aria-expanded="false"
-								   asp-action="Index" asp-controller="Home" asp-area="User">
+								   asp-action="Index" asp-controller="Shopping" asp-area="User">
 									Foods
 								</a>
 							</li>
 							<li>
 								<a class="nav-link" role="button" aria-expanded="false"
-								   asp-action="Index" asp-controller="Shopping" asp-area="User">
-									Needs
+								   asp-action="Index" asp-controller="Home" asp-area="User">
+									Stock
 								</a>
-							</li>
-							<li class="nav-item dropdown text-white-50">
-								<a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button"
-								   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Structures
-								</a>
-								<div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
-									@if (User.IsInRole(SD.OwnerUser) || User.IsInRole(SD.AdminUser))
-									{
-										<a class="dropdown-item" asp-action="Index" asp-controller="Category" asp-area="Admin">Category</a>
-										<a class="dropdown-item" asp-action="Index" asp-controller="SubCategory" asp-area="Admin">SubCategory</a>
-									}
-									<a class="dropdown-item" asp-action="Index" asp-controller="Food" asp-area="Admin">Food Types</a>
-								</div>
 							</li>
 							<li>
 								<a class="nav-link" role="button" aria-expanded="false"
@@ -72,26 +58,48 @@
 									<i class="fas fa-cart-plus"></i>Cart
 								</a>
 							</li>
-							<li>
-								<a class="nav-link" role="button" aria-expanded="false"
-								   asp-action="Index" asp-controller="User" asp-area="Admin">
-									<i class="fas fa-users"></i>Users
-								</a>
-							</li>
-							<li class="nav-item dropdown text-white-50">
-								<a class="nav-link dropdown-toggle" role="button" aria-expanded="false"
-								   href="#" id="navbarDropDownData" data-toggle="dropdown"
-								   aria-haspopup="true">
-									<i class="fas fa-database"></i>Data
-								</a>
-								<div class="dropdown-menu" aria-labelledby="navbarDropDownData">
-									@if (User.IsInRole(SD.OwnerUser) || User.IsInRole(SD.AdminUser))
-									{
-										<a class="dropdown-item" asp-action="Export" asp-controller="Data" asp-area="Admin">Export</a>
-										<a class="dropdown-item" asp-action="Import" asp-controller="Data" asp-area="Admin">Import</a>
-									}
-								</div>
-							</li>
+
+							@if (User.IsInRole(SD.OwnerUser) || User.IsInRole(SD.AdminUser))
+							{
+								<li class="nav-item dropdown text-white-50">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button"
+									   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Manage
+									</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+
+										<a class="dropdown-item" asp-action="Index" asp-controller="Category" asp-area="Admin">Category</a>
+										<a class="dropdown-item" asp-action="Index" asp-controller="SubCategory" asp-area="Admin">SubCategory</a>
+
+										<a class="dropdown-item" asp-action="Index" asp-controller="Food" asp-area="Admin">Food Types</a>
+									</div>
+								</li>
+							}
+
+							@if (User.IsInRole(SD.OwnerUser) || User.IsInRole(SD.AdminUser))
+							{
+								<li>
+									<a class="nav-link" role="button" aria-expanded="false"
+									   asp-action="Index" asp-controller="User" asp-area="Admin">
+										<i class="fas fa-users"></i>Users
+									</a>
+								</li>
+							}
+
+							@if (User.IsInRole(SD.OwnerUser) || User.IsInRole(SD.AdminUser))
+							{
+								<li class="nav-item dropdown text-white-50">
+									<a class="nav-link dropdown-toggle" role="button" aria-expanded="false"
+									   href="#" id="navbarDropDownData" data-toggle="dropdown"
+									   aria-haspopup="true">
+										<i class="fas fa-database"></i>Data
+									</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropDownData">										
+											<a class="dropdown-item" asp-action="Export" asp-controller="Data" asp-area="Admin">Export</a>
+											<a class="dropdown-item" asp-action="Import" asp-controller="Data" asp-area="Admin">Import</a>										
+									</div>
+								</li>
+							}
 						}
 					</ul>
 				</div>

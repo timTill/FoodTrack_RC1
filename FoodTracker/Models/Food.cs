@@ -39,6 +39,13 @@ namespace FoodTracker.Models
 		[ForeignKey("SubCategoryId")]
 		public virtual SubCategory SubCategory { get; set; }
 
+		[Required]
+		[Display(Name = "owner_name")]
+		public string OwnerName { get; set; }
+
+		[ForeignKey("OwnerName")]
+		public virtual ApplicationUser ApplicationUser { get; set; }
+
 		public bool IsInCart { get; set; }
 
 		public QuantityLeft QuantityLeft { get; set; }

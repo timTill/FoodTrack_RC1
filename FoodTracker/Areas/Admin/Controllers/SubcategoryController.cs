@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodTracker.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize(Roles = "Admin,Owner")]
+	[Authorize]
 	public class SubCategoryController : Controller
 	{
 		private readonly ApplicationDbContext _db;
@@ -33,7 +33,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 			return View(subCategories);
 		}
 
+		
 		[HttpGet]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> Create()
 		{
 			SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
@@ -48,6 +50,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> Create(SubCategoryAndCategoryViewModel model)
 		{
 			if (ModelState.IsValid)
@@ -75,6 +78,8 @@ namespace FoodTracker.Areas.Admin.Controllers
 			};
 			return View(modelVM);
 		}
+
+		[Authorize]
 		[ActionName("GetSubCategory")]
 		public async Task<IActionResult> GetSubCategory(int id)
 		{
@@ -87,6 +92,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null)
@@ -113,6 +119,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		//POST - EDIT
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> Edit(SubCategoryAndCategoryViewModel model)
 		{
 			if (ModelState.IsValid)
@@ -145,6 +152,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
+		[Authorize]
 		public async Task<IActionResult> Details(int? id)
 		{
 			if (id == null)
@@ -160,6 +168,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null)
@@ -174,9 +183,10 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 			return View(subCategory);
 		}
-		
-		[HttpPost, ActionName("Delete")]
+
 		[ValidateAntiForgeryToken]
+		[HttpPost, ActionName("Delete")]
+		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
@@ -184,6 +194,5 @@ namespace FoodTracker.Areas.Admin.Controllers
 			await _db.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 		}
-
 	}
 }

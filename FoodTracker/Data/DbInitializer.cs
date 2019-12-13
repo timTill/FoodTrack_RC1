@@ -43,14 +43,25 @@ namespace FoodTracker.Data
 
 			_usermanager.CreateAsync(new ApplicationUser
 			{
-				UserName = "ownerFT@gmail.com",
-				Email = "ownerFT@gmail.com",
+				UserName = SD.ownerEmail,
+				Email = SD.ownerEmail,
 				Name = "Teszt Elek",
 				EmailConfirmed = true
-			}, "Tesztellek1*").GetAwaiter().GetResult();
+			}, SD.ownerpw).GetAwaiter().GetResult();
 
-			IdentityUser user = await _db.Users.FirstOrDefaultAsync(u => u.Email == "ownerFT@gmail.com");
-			await _usermanager.AddToRoleAsync(user, SD.OwnerUser);
+
+			_usermanager.CreateAsync(new ApplicationUser
+			{
+				UserName = SD.endUserEmail,
+				Email = SD.endUserEmail,
+				Name = "Teszt János",
+				EmailConfirmed = true
+			}, SD.ownerpw).GetAwaiter().GetResult();
+
+			IdentityUser ownerUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == SD.ownerEmail);
+			IdentityUser endUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == SD.endUserEmail);
+			await _usermanager.AddToRoleAsync(ownerUser, SD.OwnerUser);
+			await _usermanager.AddToRoleAsync(endUser, SD.EndUser);
 		}
 	}
 }

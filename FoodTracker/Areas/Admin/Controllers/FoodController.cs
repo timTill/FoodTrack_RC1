@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
 using FoodTracker.Models.ViewModels;
+using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +44,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 		[HttpGet]
 		public IActionResult Create()
-		{
+		{			
 			return View(foodModel);
 		}
 
@@ -50,15 +52,24 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CreatePOST()
 		{
+			
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			SD.userGUID = claim.Value;
+			foodModel.Food.OwnerName = SD.userGUID;
 			//foodModel.Food.BestBefore = DateTime.Now;
+			ModelState.Remove("Food.OwnerName");
 			if (!ModelState.IsValid)
 			{
 				return View(foodModel);
-			}
+			}			
+
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
 			_db.Foods.Add(foodModel.Food);
+								
+
 			await _db.SaveChangesAsync();			
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction(nameof(Index),"Home", new { area = "User" });
 		}
 
 		[HttpGet]

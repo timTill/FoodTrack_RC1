@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
 using FoodTracker.Models.ViewModels;
+using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,17 +22,26 @@ namespace FoodTracker.Areas.User.Controllers
 			_db = db;
 		}
 
+		public string GetCurrentUserGUID()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var userGUID = claim.Value;
+			return userGUID;
+		}
+
 		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
+			string userGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
 				//FoodItem = await _db.Foods.Where(m => m.QuantityLeft == 0).Include(m => m.Category).
 				//Include(m => m.SubCategory).ToListAsync(),
 				//Category = await _db.Category.ToListAsync(),
 				FoodItem = await _db.Foods.Include(m => m.Category).
-				Include(m => m.SubCategory).ToListAsync(),
+						Include(m => m.SubCategory).Where(f=>f.OwnerName == userGUID).ToListAsync(),
 				Category = await _db.Category.ToListAsync(),
 			};
 			return View(IndexVM);
@@ -51,6 +62,7 @@ namespace FoodTracker.Areas.User.Controllers
 			selectedFood.Description = food.Description;
 			selectedFood.QuantityLeft = food.QuantityLeft;
 			selectedFood.Unit = food.Unit;
+			selectedFood.IsInCart = false; //cart is ezt a fv-t használja, h onnan kikerüljön
 
 			if (food.BestBefore != null && food.QuantityLeft != 0)
 			{			
@@ -58,6 +70,19 @@ namespace FoodTracker.Areas.User.Controllers
 				return RedirectToAction("Index","Home");
 			}
 			return View(selectedFood);
+		}
+
+		public async Task<IActionResult> AddToCart(int id)
+		{
+			Food foodToCart = await _db.Foods.FirstOrDefaultAsync(f => f.ID == id);
+			if (foodToCart != null)
+			{
+				foodToCart.IsInCart = true;
+				await _db.SaveChangesAsync();
+			}
+			//Food selectedFood = _db.Foods.Where(f => f.ID == id).Include(m => m.Category).Include(m => m.SubCategory).FirstOrDefault();
+			else return BadRequest("Request error on putting fooditem to cart.");
+			return RedirectToAction(nameof(Index));
 		}
 
 		public async Task<IActionResult> DeleteFoodTypeConf(int? id)
@@ -80,9 +105,5 @@ namespace FoodTracker.Areas.User.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-
-
-
-
 	}
 }
