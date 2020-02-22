@@ -100,16 +100,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
+			foodModel.Food.CategoryId = Convert.ToInt32(Request.Form["CategoryId"].ToString());
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
-
-			if (!ModelState.IsValid)
-			{
-				foodModel.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == foodModel.Food.CategoryId)
-					.ToListAsync();
-				return View(foodModel);
-			}
-
-			//var foodTypeFromDb = await _db.Foods.FindAsync(foodModel.Food.ID);
+			
 			var foodTypeFromDb = await _db.Foods.FindAsync(id);
 			foodTypeFromDb.Name = foodModel.Food.Name;									
 			foodTypeFromDb.CategoryId = foodModel.Food.CategoryId;
@@ -117,7 +110,6 @@ namespace FoodTracker.Areas.Admin.Controllers
 			foodTypeFromDb.Measurement = foodModel.Food.Measurement;
 			foodTypeFromDb.Priority = foodModel.Food.Priority;
 			await _db.SaveChangesAsync();
-
 			return RedirectToAction(nameof(Index));
 		}
 

@@ -1,0 +1,22 @@
+﻿@model FoodTracker.Models.Food
+
+@if (((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) <= 1)
+{
+<h4 class="text-danger">@((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) day</h4>
+}
+
+@if (((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) < 3 && ((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) > 1)
+{
+<h4 class="text-warning">@((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) days</h4>
+}
+
+@if (((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) <= 5 && ((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) >= 3)
+{
+<h4 class="text-info">@((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) days</h4>
+}
+
+@if (((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) > 5)
+{
+<h4 class="text-success">@((Model.BestBefore.Value.Date - DateTime.Now.Date).Days) days</h4>
+}
+
