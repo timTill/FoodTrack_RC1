@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Port\**" />
     <Compile Remove="qka\**" />
+    <Content Remove="Port\**" />
     <Content Remove="qka\**" />
+    <EmbeddedResource Remove="Port\**" />
     <EmbeddedResource Remove="qka\**" />
+    <None Remove="Port\**" />
     <None Remove="qka\**" />
   </ItemGroup>
 
@@ -33,7 +37,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Port\" />
     <Folder Include="wwwroot\Data\" />
   </ItemGroup>
 

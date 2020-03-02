@@ -99,10 +99,12 @@ namespace FoodTracker.Models
 								new XElement("Description", foodItem.Description),
 								new XElement("CategoryID", foodItem.CategoryId),
 								new XElement("SubcategoryId", foodItem.SubCategoryId),
-								new XElement("BestBefore", null),
-								new XElement("Unit", 0),
+								//new XElement("BestBefore", null),
+								new XElement("BestBefore", foodItem.BestBefore),
+								//new XElement("Unit", 0),
+								new XElement("Unit", foodItem.Unit),
 								new XElement("Measurement", foodItem.Measurement),
-								new XElement("QuanityLeft", QuantityLeft.Semennyi)
+								new XElement("QuanityLeft", foodItem.QuantityLeft)
 								))
 							));
 			return xmlDocument;
