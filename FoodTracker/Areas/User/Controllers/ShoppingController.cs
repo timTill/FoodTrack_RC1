@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -13,13 +14,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodTracker.Areas.User.Controllers
 {
+	[Authorize]
 	[Area("User")]
 	public class ShoppingController : Controller
     {
-		private readonly ApplicationDbContext _db;
-		public ShoppingController(ApplicationDbContext db)
+		
+		private readonly IUserFoodRepository _repo;
+
+		public ShoppingController (IUserFoodRepository repo)
 		{
-			_db = db;
+			this._repo = repo;
 		}
 
 		public string GetCurrentUserGUID()
@@ -29,26 +33,26 @@ namespace FoodTracker.Areas.User.Controllers
 			var userGUID = claim.Value;
 			return userGUID;
 		}
-
-		[Authorize]
+		
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
 			string userGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
-			{
-				//FoodItem = await _db.Foods.Where(m => m.QuantityLeft == 0).Include(m => m.Category).
-				//Include(m => m.SubCategory).ToListAsync(),
-				//Category = await _db.Category.ToListAsync(),
-				FoodItem = await _db.Foods.Include(m => m.Category).
-						Include(m => m.SubCategory).Where(f=>f.OwnerName == userGUID).ToListAsync(),
-				Category = await _db.Category.ToListAsync(),
+			{			
+				FoodItem =await _repo.GetAllFoodTypeByOwner(userGUID),
+				/*FoodItem = await _db.Foods.Include(m => m.Category).
+						Include(m => m.SubCategory).Where(f=>f.OwnerName == userGUID).ToListAsync(),*/
+				Category = _repo.GetAllCategories(),
 			};
 			return View(IndexVM);
 		}
-		public IActionResult AddToStock(int id)
-		{			
-			Food selectedFood = _db.Foods.Where(f => f.ID == id).Include(m => m.Category).Include(m => m.SubCategory).FirstOrDefault();
+
+		public async Task<IActionResult> AddToStock(int id)
+		{
+			Food selectedFood = await _repo.GetFood(id);
+			if (selectedFood == null)
+				return NotFound();
 			return View(selectedFood);
 		}
 
@@ -57,7 +61,7 @@ namespace FoodTracker.Areas.User.Controllers
 		[ActionName("AddToStock")]
 		public async Task<IActionResult> AddToStockPost(Food food)
 		{
-			Food selectedFood = _db.Foods.Where(f => f.ID == food.ID).Include(m => m.Category).Include(m => m.SubCategory).FirstOrDefault();
+			Food selectedFood = await _repo.GetFood(food.ID);
 			selectedFood.BestBefore = food.BestBefore;
 			selectedFood.Description = food.Description;
 			selectedFood.QuantityLeft = food.QuantityLeft;
@@ -65,8 +69,8 @@ namespace FoodTracker.Areas.User.Controllers
 			selectedFood.IsInCart = false; //cart is ezt a fv-t használja, h onnan kikerüljön
 
 			if (food.BestBefore != null && food.QuantityLeft != 0)
-			{			
-				await _db.SaveChangesAsync();
+			{
+				_repo.SaveDB();
 				return RedirectToAction("Index","Home");
 			}
 			return View(selectedFood);
@@ -74,35 +78,13 @@ namespace FoodTracker.Areas.User.Controllers
 
 		public async Task<IActionResult> AddToCart(int id)
 		{
-			Food foodToCart = await _db.Foods.FirstOrDefaultAsync(f => f.ID == id);
+			Food foodToCart = await _repo.GetFood(id);
 			if (foodToCart != null)
 			{
 				foodToCart.IsInCart = true;
-				await _db.SaveChangesAsync();
+				_repo.SaveDB();
 			}
-			//Food selectedFood = _db.Foods.Where(f => f.ID == id).Include(m => m.Category).Include(m => m.SubCategory).FirstOrDefault();
-			else return BadRequest("Request error on putting fooditem to cart.");
-			return RedirectToAction(nameof(Index));
-		}
-
-		public async Task<IActionResult> DeleteFoodTypeConf(int? id)
-		{
-			if (id != null)
-			{
-				Food foodToConfirm = await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
-				return View(foodToConfirm);
-			}
-			return RedirectToAction(nameof(Index));
-		}
-		
-		public async Task<IActionResult> DeleteFoodType(int? id)
-		{
-			if (id != null)
-			{
-				Food foodToDelete = await _db.Foods.FindAsync(id);
-				_db.Foods.Remove(foodToDelete);				
-				await _db.SaveChangesAsync();
-			}
+			else return NotFound();
 			return RedirectToAction(nameof(Index));
 		}
 	}

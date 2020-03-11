@@ -22,10 +22,8 @@ namespace FoodTracker
 			WebHost.CreateDefaultBuilder(args)
 			.ConfigureLogging((hostingContext, logging) =>
 		{
+			logging.ClearProviders();
 			logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-			logging.AddConsole();
-			logging.AddDebug();
-			logging.AddEventSourceLogger();
 			logging.AddNLog();
 		})
 				.UseStartup<Startup>();

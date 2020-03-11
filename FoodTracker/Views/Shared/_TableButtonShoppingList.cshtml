@@ -7,7 +7,11 @@
 		<a class="btn btn-success text-white" asp-controller="Shopping" asp-action="AddToCart" asp-area="User" asp-route-Id="@Model">
 			<i class="fas fa-cart-plus"></i>
 		</a>
+		<a class="btn btn-danger text-white" asp-controller="Food" asp-action="Delete" asp-area="Admin" asp-route-Id="@Model">
+
+			@*
 		<a class="btn btn-danger text-white" asp-controller="Shopping" asp-action="DeleteFoodTypeConf" asp-area="User" asp-route-Id="@Model">
+			*@
 			<i class="fas fa-trash-alt"></i>
 		</a>
 	</div>

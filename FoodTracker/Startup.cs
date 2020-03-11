@@ -14,6 +14,7 @@ using FoodTracker.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 
 namespace FoodTracker
 {
@@ -49,7 +50,12 @@ namespace FoodTracker
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-			services.AddScoped<IFoodRepository, SQLFoodRepository>();			
+
+			services.AddScoped<ICategoryRepository, CategoryRepository>();
+			services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+			services.AddScoped<IFoodRepository, FoodRepository>();
+			services.AddScoped<IUserFoodRepository, UserFoodRepository>();
+			//services.AddScoped<ISQLRepository, SQLRepository>();			
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,15 +65,12 @@ namespace FoodTracker
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseDatabaseErrorPage();
-				//app.UseStatusCodePages();
-				//app.UseStatusCodePagesWithReExecute("/Admin/ErrorCheck/{0}");
 			}
 			else
-			{
-				//app.UseStatusCodePagesWithRedirects("Admin/Error/{0}");
+			{				
 				app.UseExceptionHandler("/Admin/ErrorCheck");
 				app.UseStatusCodePagesWithReExecute("/Admin/ErrorCheck/{0}");
-				// The default HSTS value is 30 days. You may want to change this for ú scenarios, see https://aka.ms/aspnetcore-hsts.
+				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
 			dbInitializer.Initialize();

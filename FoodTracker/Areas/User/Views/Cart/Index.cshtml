@@ -5,7 +5,7 @@
 	<div class="col-lg-2 col-sm-2 row offset-lg-11 float-center">
 	</div>
 	<ul id="menu-filters" class="menu-filter-list list-inline text-center">
-		<li class="active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li>
+		<li class="active btn btn-secondary ml-1 mr-1" data-filter=".food-track">Show All</li>
 		@foreach (var item in Model.Category)
 		{
 			<li class="ml-1 mr-1" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
@@ -32,17 +32,12 @@
 			crossorigin="anonymous"></script>
 	<script>
 		var posts = $('.post');
-
 		(function ($) {
-
 			$("#menu-filters li").click(function () {
 				$("#menu-filters li").removeClass('active btn btn-secondary');
 				$(this).addClass('active btn btn-secondary');
-
 				var selectedFilter = $(this).data("filter");
-
-				$(".menu-restaurant").fadeOut();
-
+				$(".food-track").fadeOut();
 				setTimeout(function () {
 					$(selectedFilter).slideDown();
 				}, 300);

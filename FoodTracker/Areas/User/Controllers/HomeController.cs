@@ -11,6 +11,7 @@ using FoodTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using FoodTracker.Utility;
+using FoodTracker.Models.RepositoryModules;
 
 namespace FoodTracker.Controllers
 {
@@ -19,9 +20,12 @@ namespace FoodTracker.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ApplicationDbContext _db;
-		public HomeController(ApplicationDbContext db)
+		private readonly IUserFoodRepository _repo;
+
+		public HomeController(ApplicationDbContext db, IUserFoodRepository repo)
 		{
-			_db = db;			
+			_db = db;
+			this._repo = repo;
 		}
 
 		public string GetCurrentUserGUID()
@@ -37,15 +41,14 @@ namespace FoodTracker.Controllers
 			string UserGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
-				//FoodItem = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync(),
-				FoodItem = await _db.Foods.Where(m => m.QuantityLeft != 0 && m.OwnerName == UserGUID).Include(m => m.Category).
-				Include(m => m.SubCategory).ToListAsync(),
-				Category = await _db.Category.ToListAsync(),
+				FoodItem = await _repo.GetAllRealFoodByOwner(UserGUID),
+				Category = _repo.GetAllCategories(),//_db.Category.ToListAsync(),
 			};
 			return View(IndexVM);
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -57,12 +60,12 @@ namespace FoodTracker.Controllers
 		{
 			if (id != null)
 			{
-				Food foodToNull = await _db.Foods.FindAsync(id);
+				Food foodToNull = await _repo.GetFood(id);//_db.Foods.FindAsync(id);
 				foodToNull.BestBefore = null;
 				foodToNull.QuantityLeft = 0;
 				foodToNull.Description = String.Empty;
 				foodToNull.Unit = 0;
-				await _db.SaveChangesAsync();
+				_repo.SaveDB(); //_db.SaveChangesAsync();
 			}
 			return RedirectToAction(nameof(Index));
 		}
@@ -71,51 +74,40 @@ namespace FoodTracker.Controllers
 		{
 			if (id != null)
 			{
-				Food foodToConfirm = await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
-				return View(foodToConfirm);
+				Food foodToConfirm = await _repo.GetFood(id);
+					//await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+				if (foodToConfirm != null)
+				{
+					return View(foodToConfirm);
+				}				
 			}
-			return RedirectToAction(nameof(Index));
+			return NotFound();
 		}
 
-		public async Task<ViewResult> UpdateStock(int? id)
+		public async Task<IActionResult> UpdateStock(int? id)
 		{
-			Food food = await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+			Food food = await _repo.GetFood(id);
+			//_db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+			if (food == null)
+				return NotFound();
 			return View(food);
 		}
 
-
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> UpdateStock(Food food)
 		{
 			if (food != null)
 			{
-				Food newFood = await _db.Foods.Where(f => f.ID == food.ID).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+				Food newFood = await _repo.GetFood(food.ID);
+				//_db.Foods.Where(f => f.ID == food.ID).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
 				newFood.Description = food.Description;
 				newFood.BestBefore = food.BestBefore;
 				newFood.QuantityLeft = food.QuantityLeft;
 				newFood.Unit = food.Unit;
-				await _db.SaveChangesAsync();
-			}
-
-			return RedirectToAction(nameof(Index));
-		}
-
-		/*
-		public async Task<IActionResult> ConfirmAction(int? id)
-		{
-			if (id != null)
-			{
-				Food foodToConfirm = await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
-				return View(foodToConfirm);
+				_repo.SaveDB(); //_db.SaveChangesAsync();
 			}
 			return RedirectToAction(nameof(Index));
 		}
-		public IActionResult Privacy()
-		{
-			return View();
-		}
-
-
-		*/
 	}
 }

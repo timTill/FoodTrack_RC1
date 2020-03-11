@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +16,17 @@ namespace FoodTracker.Areas.Admin.Controllers
 	[Authorize(Roles ="Admin,Owner")]
 	public class CategoryController : Controller
     {
-		private readonly ApplicationDbContext _db;
+		private readonly ICategoryRepository _repo;
 
-		public CategoryController(ApplicationDbContext db)
+		public CategoryController(ICategoryRepository repo)
 		{
-			_db = db;
+			this._repo = repo;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Index()
+		public IActionResult Index()
 		{			
-			return View(await _db.Category.ToListAsync());
+			return View( _repo.GetAllCategories());
 		}
 
 		[HttpGet]
@@ -39,12 +40,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 		public async Task<IActionResult> Create(Category category)
 		{
 			if (ModelState.IsValid)
-			{				
-				_db.Category.Add(category);
-				await _db.SaveChangesAsync();
-
+			{
+				await _repo.AddCategory(category);
 				return RedirectToAction(nameof(Index));
-
 			}
 			return View(category);
 		}
@@ -56,7 +54,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			var category = await _db.Category.FindAsync(id);
+			var category = await _repo.GetCategory(id);
 			if (category == null)
 			{
 				return NotFound();
@@ -70,8 +68,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				_db.Update(category);
-				await _db.SaveChangesAsync();
+				await _repo.UpdateCategory(category);
 
 				return RedirectToAction(nameof(Index));
 			}
@@ -84,7 +81,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			var category = await _db.Category.FindAsync(id);
+			var category = await _repo.GetCategory(id);
 			if (category == null)
 			{
 				return NotFound();
@@ -96,14 +93,13 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int? id)
 		{
-			var category = await _db.Category.FindAsync(id);
+			var category = await _repo.GetCategory(id);
 
 			if (category == null)
 			{
 				return View();
 			}
-			_db.Category.Remove(category);
-			await _db.SaveChangesAsync();
+			await _repo.DeleteCategory(category);			
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -114,7 +110,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			{
 				return RedirectToAction("ResourceNotFound", "Home", new { area = "Admin" });				
 			}
-			var category = await _db.Category.FindAsync(id);
+			var category = await _repo.GetCategory(id);
 
 			if (category == null)
 			{

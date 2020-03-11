@@ -5,19 +5,25 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodTracker.Areas.User.Controllers
 {
+	[Authorize]
 	[Area("User")]
 	public class CartController : Controller
     {
 		private readonly ApplicationDbContext _db;
-		public CartController(ApplicationDbContext db)
+		private readonly IUserFoodRepository _repo;
+
+		public CartController(ApplicationDbContext db, IUserFoodRepository repo)
 		{
 			_db = db;
+			this._repo = repo;
 		}
 
 		public string GetCurrentUserGUID()
@@ -33,9 +39,9 @@ namespace FoodTracker.Areas.User.Controllers
 			string userGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
-				//FoodItem = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync(),
-				FoodItem = await _db.Foods.Where(m => m.IsInCart== true).Include(m => m.Category).
-				Include(m => m.SubCategory).Where(f => f.OwnerName == userGUID).ToListAsync(),
+				FoodItem = await _repo.GetAllFoodInCartByOwner(userGUID),
+				/*FoodItem = await _db.Foods.Where(m => m.IsInCart== true).Include(m => m.Category).
+				Include(m => m.SubCategory).Where(f => f.OwnerName == userGUID).ToListAsync(),*/
 				Category = await _db.Category.ToListAsync(),
 			};
 			return View(IndexVM);
@@ -49,10 +55,9 @@ namespace FoodTracker.Areas.User.Controllers
 				foodToCart.IsInCart = false;
 				await _db.SaveChangesAsync();
 			}
-			//Food selectedFood = _db.Foods.Where(f => f.ID == id).Include(m => m.Category).Include(m => m.SubCategory).FirstOrDefault();
-			else return BadRequest("Request error on removing fooditem from cart.");
+			//else return BadRequest("Request error on removing fooditem from cart.");
+			else return NotFound();
 			return RedirectToAction(nameof(Index));
-
 		}
 	}
 }

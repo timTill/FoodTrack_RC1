@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -17,20 +18,19 @@ namespace FoodTracker.Areas.Admin.Controllers
 	[Authorize]
 	[Area("Admin")]
 	public class FoodController : Controller
-    {
-		private readonly ApplicationDbContext _db;
-		private readonly IHostingEnvironment _hostingEnvironment;
+	{
+		private readonly IFoodRepository _repo;
 
 		[BindProperty]
 		public FoodViewModel foodModel { get; set; }
 
-		public FoodController(ApplicationDbContext db, IHostingEnvironment hostingEnvironment)
-		{
-			_db = db;
-			_hostingEnvironment = hostingEnvironment;
+		public FoodController(IFoodRepository repo)
+		{			
+			this._repo = repo;
+
 			foodModel = new FoodViewModel()
 			{
-				Category = _db.Category,
+				Category = _repo.GetAllCategories(),
 				Food = new Models.Food()
 			};
 		}
@@ -38,13 +38,13 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			var foods = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync();
+			var foods = await _repo.GetAllFood();
 			return View(foods);
 		}
 
 		[HttpGet]
 		public IActionResult Create()
-		{			
+		{
 			return View(foodModel);
 		}
 
@@ -52,7 +52,6 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CreatePOST()
 		{
-			
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 			SD.userGUID = claim.Value;
@@ -62,14 +61,13 @@ namespace FoodTracker.Areas.Admin.Controllers
 			if (!ModelState.IsValid)
 			{
 				return View(foodModel);
-			}			
+			}
 
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
-			_db.Foods.Add(foodModel.Food);
-								
 
-			await _db.SaveChangesAsync();			
-			return RedirectToAction(nameof(Index),"Home", new { area = "User" });
+			await _repo.AddFood(foodModel.Food);
+
+			return RedirectToAction(nameof(Index), "Home", new { area = "User" });
 		}
 
 		[HttpGet]
@@ -80,11 +78,8 @@ namespace FoodTracker.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			foodModel.Food = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory)
-							.SingleOrDefaultAsync(m => m.ID == id);
-			foodModel.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == foodModel.Food.CategoryId)
-									.ToListAsync();
-
+			foodModel.Food = await _repo.GetFood(id);
+			foodModel.SubCategory = await _repo.GetSubCategoryByCategory(foodModel.Food.CategoryId);
 			if (foodModel.Food == null)
 			{
 				return NotFound();
@@ -102,14 +97,10 @@ namespace FoodTracker.Areas.Admin.Controllers
 			}
 			foodModel.Food.CategoryId = Convert.ToInt32(Request.Form["CategoryId"].ToString());
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
-			
-			var foodTypeFromDb = await _db.Foods.FindAsync(id);
-			foodTypeFromDb.Name = foodModel.Food.Name;									
-			foodTypeFromDb.CategoryId = foodModel.Food.CategoryId;
-			foodTypeFromDb.SubCategoryId = foodModel.Food.SubCategoryId;
-			foodTypeFromDb.Measurement = foodModel.Food.Measurement;
-			foodTypeFromDb.Priority = foodModel.Food.Priority;
-			await _db.SaveChangesAsync();
+
+			foodModel.Food.ID = (int)id;
+
+			await _repo.UpdateFood(foodModel.Food);
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -121,10 +112,8 @@ namespace FoodTracker.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			foodModel.Food= await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory)
-				.SingleOrDefaultAsync(m => m.ID == id);
-
-			if (foodModel.Food== null)
+			foodModel.Food = await _repo.GetFood(id);
+			if (foodModel.Food == null)
 			{
 				return NotFound();
 			}
@@ -140,30 +129,21 @@ namespace FoodTracker.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			foodModel.Food = await _db.Foods.Include(m => m.Category).Include(m => m.SubCategory)
-				.SingleOrDefaultAsync(m => m.ID == id);
+			foodModel.Food = await _repo.GetFood(id);
 
-			if (foodModel.Food== null)
+			if (foodModel.Food == null)
 			{
 				return NotFound();
 			}
 
 			return View(foodModel);
 		}
-		
+
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			
-			Food food = await _db.Foods.FindAsync(id);
-
-			if (food != null)
-			{							
-				_db.Foods.Remove(food);
-				await _db.SaveChangesAsync();
-			}
-
+			await _repo.DeleteFood(id);
 			return RedirectToAction(nameof(Index));
 		}
 	}

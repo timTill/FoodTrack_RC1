@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Data;
 using FoodTracker.Models;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -18,18 +19,20 @@ namespace FoodTracker.Areas.Admin.Controllers
 	public class SubCategoryController : Controller
 	{
 		private readonly ApplicationDbContext _db;
+		private readonly ISubCategoryRepository _repo;
 
 		[TempData]
 		public string StatusMessage { get; set; }
 
-		public SubCategoryController(ApplicationDbContext db)
+		public SubCategoryController(ApplicationDbContext db, ISubCategoryRepository repo)
 		{
 			_db = db;
+			this._repo = repo;
 		}
 
-		public async Task<IActionResult> Index()
+		public IActionResult Index()
 		{
-			var subCategories = await _db.SubCategory.Include(s => s.Category).ToListAsync();
+			var subCategories =  _repo.GetAllSubCategories();		
 			return View(subCategories);
 		}
 
@@ -40,9 +43,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 		{
 			SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
 			{
-				CategoryList = await _db.Category.ToListAsync(),
+				CategoryList =  _repo.GetAllCategories(),
 				SubCategory = new Models.SubCategory(),
-				SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync()
+				SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync(),								
 			};
 
 			return View(model);
@@ -54,24 +57,21 @@ namespace FoodTracker.Areas.Admin.Controllers
 		public async Task<IActionResult> Create(SubCategoryAndCategoryViewModel model)
 		{
 			if (ModelState.IsValid)
-			{
-				var doesSubCategoryExists = _db.SubCategory.Include(s => s.Category).Where(s => s.Name == model.SubCategory.Name && s.Category.Id == model.SubCategory.CategoryId);
-
-				if (doesSubCategoryExists.Count() > 0)
+			{			
+				if (await _repo.DoesSubCategoryExist(model.SubCategory))
 				{
 					//Error
-					StatusMessage = "Error : Sub Category exists under " + doesSubCategoryExists.First().Category.Name + " category. Please use another name.";
+					StatusMessage = "Error : Sub Category already exists. Please use another name.";
 				}
 				else
 				{
-					_db.SubCategory.Add(model.SubCategory);
-					await _db.SaveChangesAsync();
+					await _repo.AddSubCategory(model.SubCategory);
 					return RedirectToAction(nameof(Index));
 				}
 			}
 			SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
 			{
-				CategoryList = await _db.Category.ToListAsync(),
+				CategoryList = _repo.GetAllCategories(),
 				SubCategory = model.SubCategory,
 				SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync(),
 				StatusMessage = StatusMessage
@@ -80,14 +80,10 @@ namespace FoodTracker.Areas.Admin.Controllers
 		}
 
 		[Authorize]
-		[ActionName("GetSubCategory")]
+		//[ActionName("GetSubCategory")]
 		public async Task<IActionResult> GetSubCategory(int id)
 		{
-			List<SubCategory> subCategories = new List<SubCategory>();
-
-			subCategories = await (from subCategory in _db.SubCategory
-								   where subCategory.CategoryId == id
-								   select subCategory).ToListAsync();
+			IEnumerable<SubCategory> subCategories = await _repo.GetSubCategoryByCategory(id);
 			return Json(new SelectList(subCategories, "Id", "Name"));
 		}
 
@@ -100,8 +96,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
-
+			var subCategory = await _repo.GetSubCategory(id);
 			if (subCategory == null)
 			{
 				return NotFound();
@@ -109,9 +104,9 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 			SubCategoryAndCategoryViewModel model = new SubCategoryAndCategoryViewModel()
 			{
-				CategoryList = await _db.Category.ToListAsync(),
+				CategoryList = _repo.GetAllCategories(),
 				SubCategory = subCategory,
-				SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).Distinct().ToListAsync()
+				SubCategoryList = await _repo.GetAllDistinctSubCategories()
 			};
 			return View(model);
 		}
@@ -124,30 +119,26 @@ namespace FoodTracker.Areas.Admin.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var doesSubCategoryExists = _db.SubCategory.Include(s => s.Category).Where(s => s.Name == model.SubCategory.Name && s.Category.Id == model.SubCategory.CategoryId);
+				var doesSubCategoryExists = await _repo.DoesSubCategoryExist(model.SubCategory);
 
-				if (doesSubCategoryExists.Count() > 0)
+				if (doesSubCategoryExists)
 				{
 					//Error
-					StatusMessage = "Error : Sub Category exists under " + doesSubCategoryExists.First().Category.Name + " category. Please use another name.";
+					StatusMessage = "Error : Sub Category exists. Please use another name.";
 				}
 				else
 				{
-					var subCatFromDb = await _db.SubCategory.FindAsync(model.SubCategory.Id);
-					subCatFromDb.Name = model.SubCategory.Name;
-
-					await _db.SaveChangesAsync();
+					await _repo.UpdateSubCategory(model.SubCategory);
 					return RedirectToAction(nameof(Index));
 				}
 			}
 			SubCategoryAndCategoryViewModel modelVM = new SubCategoryAndCategoryViewModel()
 			{
-				CategoryList = await _db.Category.ToListAsync(),
+				CategoryList =  _repo.GetAllCategories(),
 				SubCategory = model.SubCategory,
 				SubCategoryList = await _db.SubCategory.OrderBy(p => p.Name).Select(p => p.Name).ToListAsync(),
 				StatusMessage = StatusMessage
 			};
-			//modelVM.SubCategory.Id = id;
 			return View(modelVM);
 		}
 
@@ -189,9 +180,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[Authorize(Roles = "Admin,Owner")]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
-			_db.SubCategory.Remove(subCategory);
-			await _db.SaveChangesAsync();
+			await _repo.DeleteSubCategory(id);
 			return RedirectToAction(nameof(Index));
 		}
 	}
