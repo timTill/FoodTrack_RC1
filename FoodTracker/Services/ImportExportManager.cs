@@ -164,6 +164,7 @@ namespace FoodTracker.Models
 			xmlDocument.Save(XMLFileToExport);
 		}
 
+		
 		private PortDBViewModel normalizeIDs(PortDBViewModel input)
 		{
 			//Initialize data counts

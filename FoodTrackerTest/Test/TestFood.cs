@@ -21,6 +21,5 @@ namespace FoodTrackerTest.Test
 				&& (this.Unit == foodParam.Unit)
 				);
 		}
-
 	}
 }

@@ -63,17 +63,17 @@ namespace FoodTrackerTest
 			{
 				Categories = new List<TestCategory>
 				{
-					new TestCategory { Id= 1, Name="Elso"},
+					new TestCategory { Id= 4, Name="Elso"},
 				},
 				Subcategories = new List<TestSubcategory>
 				{
-					new TestSubcategory { Id=2, Name = "Elso", CategoryId=1},
-					new TestSubcategory { Id=5, Name = "Masodik", CategoryId=1},
-					new TestSubcategory { Id=6, Name = "Harmadik", CategoryId=1},
+					new TestSubcategory { Id=2, Name = "Elso", CategoryId=4},
+					new TestSubcategory { Id=5, Name = "Masodik", CategoryId=4},
+					new TestSubcategory { Id=6, Name = "Harmadik", CategoryId=4},
 				},
 				Foods = new List<TestFood>
 				{
-					new TestFood { ID =1, Name = "Elso", CategoryId=1, SubCategoryId=5},
+					new TestFood { ID =1, Name = "Elso", CategoryId=4, SubCategoryId=5},
 				}
 			};
 
@@ -100,8 +100,6 @@ namespace FoodTrackerTest
 			Assert.Equal(expectedDBM.Subcategories, normalizedDBM.Subcategories);
 			Assert.Equal(expectedDBM.Foods, normalizedDBM.Foods);
 		}
-
-
 
 		[Fact]
 		public void TestNormalize_Categ_SubCateg_Food_AndDependencies()

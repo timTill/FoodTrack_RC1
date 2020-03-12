@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FoodTrackerTest.Test
 {
-	class TestCategory : Category
+	public class TestCategory : Category
 	{
 		public override bool Equals(object obj)
 		{
