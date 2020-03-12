@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
 namespace FoodTracker.Models
-{	
+{
 	public class ImportExportManager : IDataManager
 	{
 		private readonly IHostingEnvironment env;
@@ -23,25 +23,71 @@ namespace FoodTracker.Models
 			this.env = env;
 			_iconf = iconf;
 			XMLFileDynamicPath =
-				Path.Combine(env.WebRootPath, "Data","Data.xml");
+				Path.Combine(env.WebRootPath, "Data", "Data.xml");
 		}
 		//private const string XMLinPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\DataToImport.xml";
 		public void ExportXML(PortDBViewModel input)
 		{
-			DumpDataToXML(input);
-		}		
+			//DumpDataToXML(input);
+			XDocument xmlDocument = XMLSerializerFromDB(input);
+			string filename = "Data_" + DateTime.Now.ToShortDateString().Replace('.', '_').Replace(' ', '_') + ".xml";
+			string XMLFileToExport = Path.Combine(env.WebRootPath, "Data", filename);
+			xmlDocument.Save(XMLFileToExport);
+
+		}
 
 		public void ImportXML()
-		{			
-			//PortDBViewModel originalParsedXML = ParseXML(SD.XMLinPath);			
+		{		
 			PortDBViewModel originalParsedXML = ParseXML(XMLFileDynamicPath);
 			PortDBViewModel normalizedXml = normalizeIDs(originalParsedXML);
-			
+
+			/*
 			AddManyCategoriesFromParamToDBTest(normalizedXml.Categories);
 			AddManySubCategoriesFromParamToDBTest(normalizedXml.Subcategories);
 			AddManyFoodItemFromParamToDBTest(normalizedXml.Foods);
+			*/
+			SaveData(normalizedXml);
 		}
 
+		private void SaveData(PortDBViewModel data)
+		{
+			using (var context = new ImpExpDBContext(_iconf))
+			{
+				context.Category.AddRange(data.Categories);
+				context.SaveChanges();
+			}
+
+			using (var context = new ImpExpDBContext(_iconf))
+			{
+				context.SubCategory.AddRange(data.Subcategories);
+				context.SaveChanges();
+			}
+
+			using (var context = new ImpExpDBContext(_iconf))
+			{
+				context.Foods.AddRange(data.Foods);
+				context.SaveChanges();
+			}
+		}
+
+		public PortDBViewModel ImportFromDB()
+		{
+			using (var context = new ImpExpDBContext(_iconf))
+			{
+				List<Category> CategoryItems = context.Category.ToList();
+				IEnumerable<SubCategory> SubCategoryItems = context.SubCategory.ToList();
+				IEnumerable<Food> FoodItems = context.Foods.ToList();
+
+				PortDBViewModel DB_VM = new PortDBViewModel
+				{
+					Categories = CategoryItems,
+					Subcategories = SubCategoryItems,
+					Foods = FoodItems
+				};
+				return DB_VM;
+			}
+		}
+		/*
 		private void AddManyCategoriesFromParamToDBTest(IEnumerable<Category> categList)
 		{
 			using (var context = new ImpExpDBContext(_iconf))
@@ -68,7 +114,7 @@ namespace FoodTracker.Models
 				context.SaveChanges();
 			}
 		}
-
+		*/
 		public XDocument XMLSerializerFromDB(PortDBViewModel DB_VM)
 		{
 			XDocument xmlDocument = new XDocument(
@@ -114,7 +160,7 @@ namespace FoodTracker.Models
 		{
 			XDocument xmlDocument = XMLSerializerFromDB(DB_VM);
 			string filename = "Data_" + DateTime.Now.ToShortDateString().Replace('.', '_').Replace(' ', '_') + ".xml";
-			string XMLFileToExport = Path.Combine(env.WebRootPath, "Data", filename);			
+			string XMLFileToExport = Path.Combine(env.WebRootPath, "Data", filename);
 			xmlDocument.Save(XMLFileToExport);
 		}
 
@@ -140,7 +186,7 @@ namespace FoodTracker.Models
 					if (subcategory.CategoryId == Categories2DB[i].Id)
 					{
 						//replace subcateg.Categ by the index number+1 of the categ
-						// (cf. categ index+1 value will be the new ID in the new "clean" DB).						
+						// (cf. categ index+1 value will be the new ID in the new "clean" DB).
 						subcategory.CategoryId = i + 1;
 					}
 				}
@@ -163,7 +209,7 @@ namespace FoodTracker.Models
 				}
 			}
 
-			//normalize the Food.Category to new Category.ID
+			//normalize the Food.CategoryId to new Category.ID
 			//1. Take all categories
 			for (int i = 0; i < CategoryCount; i++)
 			{

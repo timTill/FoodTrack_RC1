@@ -18,27 +18,15 @@ namespace FoodTracker.Areas.Admin.Controllers
 		private readonly ApplicationDbContext applicationDbContext;
 		private readonly IDataManager ImpExpMan;
 
-
-		//public DataController(ApplicationDbContext applicationDbContext)
-		//public DataController(ApplicationDbContext applicationDbContext, ImportExportManager iem)
 		public DataController(ApplicationDbContext applicationDbContext, IDataManager ImpExpMan)
-		{
-			
+		{			
 			this.applicationDbContext = applicationDbContext;
 			this.ImpExpMan = ImpExpMan;
 		}
 
 		public IActionResult Export()
-		{
-			List<Category> CategoryItems = applicationDbContext.Category.ToList();
-			IEnumerable<SubCategory> SubCategoryItems = applicationDbContext.SubCategory.ToList();
-			IEnumerable<Food> FoodItems = applicationDbContext.Foods.ToList();
-			PortDBViewModel DB_VM = new PortDBViewModel
-			{
-				Categories = CategoryItems,
-				Subcategories = SubCategoryItems,
-				Foods = FoodItems
-			};
+		{	
+			PortDBViewModel DB_VM = ImpExpMan.ImportFromDB();
 			ImpExpMan.ExportXML(DB_VM);
 			return RedirectToAction("Index", "Home", new { area = "User" });		
 		}

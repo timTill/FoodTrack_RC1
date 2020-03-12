@@ -21,6 +21,11 @@
   </Categories>
   <Subcategories>
     <Subcategory>
+      <SubcategoryID>1</SubcategoryID>
+      <Name>Húsok</Name>
+      <CategoryID>3</CategoryID>
+    </Subcategory>
+    <Subcategory>
       <SubcategoryID>2</SubcategoryID>
       <Name>Tejtemék</Name>
       <CategoryID>3</CategoryID>
@@ -90,15 +95,65 @@
       <Name>Vadhús</Name>
       <CategoryID>4</CategoryID>
     </Subcategory>
-    <Subcategory>
-      <SubcategoryID>19</SubcategoryID>
-      <Name>Zöldséges</Name>
-      <CategoryID>1</CategoryID>
-    </Subcategory>
   </Subcategories>
   <FoodItems>
     <FoodItem>
+      <FoodID>1</FoodID>
+      <Name>Kolbász</Name>
+      <Description></Description>
+      <CategoryID>3</CategoryID>
+      <SubcategoryId>1</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>dkg</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>3</FoodID>
+      <Name>Zalai</Name>
+      <Description></Description>
+      <CategoryID>3</CategoryID>
+      <SubcategoryId>1</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>dkg</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>4</FoodID>
+      <Name>Szilva</Name>
+      <Description></Description>
+      <CategoryID>1</CategoryID>
+      <SubcategoryId>4</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>kg</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>5</FoodID>
+      <Name>Meggy</Name>
+      <Description></Description>
+      <CategoryID>1</CategoryID>
+      <SubcategoryId>4</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>kg</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
       <FoodID>6</FoodID>
+      <Name>Túró Rudi</Name>
+      <Description></Description>
+      <CategoryID>3</CategoryID>
+      <SubcategoryId>2</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>db</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>7</FoodID>
       <Name>OIiva olaj</Name>
       <Description>Darab</Description>
       <CategoryID>2</CategoryID>
@@ -110,17 +165,28 @@
     </FoodItem>
     <FoodItem>
       <FoodID>8</FoodID>
-      <Name>Kifli</Name>
-      <Description />
-      <CategoryID>2</CategoryID>
-      <SubcategoryId>11</SubcategoryId>
-      <BestBefore>2020-03-27T00:00:00</BestBefore>
-      <Unit>2</Unit>
-      <Measurement>db</Measurement>
-      <QuanityLeft>Keves</QuanityLeft>
+      <Name>Hortobágyi Húsos Palacsinta</Name>
+      <Description></Description>
+      <CategoryID>1</CategoryID>
+      <SubcategoryId>14</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>adag</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
       <FoodID>9</FoodID>
+      <Name>Kifli</Name>
+      <Description></Description>
+      <CategoryID>2</CategoryID>
+      <SubcategoryId>11</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>db</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>10</FoodID>
       <Name>Sajt</Name>
       <Description></Description>
       <CategoryID>3</CategoryID>
@@ -131,7 +197,7 @@
       <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
-      <FoodID>10</FoodID>
+      <FoodID>11</FoodID>
       <Name>Dobozos Tej</Name>
       <Description></Description>
       <CategoryID>3</CategoryID>
@@ -142,7 +208,7 @@
       <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
-      <FoodID>11</FoodID>
+      <FoodID>12</FoodID>
       <Name>Kelbimbó</Name>
       <Description></Description>
       <CategoryID>1</CategoryID>
@@ -153,18 +219,18 @@
       <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
-      <FoodID>12</FoodID>
+      <FoodID>13</FoodID>
       <Name>Rántott sajt</Name>
       <Description>Finom :)</Description>
       <CategoryID>1</CategoryID>
       <SubcategoryId>5</SubcategoryId>
-      <BestBefore>2020-03-13T00:00:00</BestBefore>
+      <BestBefore>2020-02-29T00:00:00</BestBefore>
       <Unit>2</Unit>
       <Measurement>kg</Measurement>
       <QuanityLeft>Adagnyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
-      <FoodID>13</FoodID>
+      <FoodID>14</FoodID>
       <Name>barack</Name>
       <Description></Description>
       <CategoryID>3</CategoryID>
@@ -175,7 +241,7 @@
       <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
     <FoodItem>
-      <FoodID>14</FoodID>
+      <FoodID>15</FoodID>
       <Name>Padlizsán</Name>
       <Description></Description>
       <CategoryID>3</CategoryID>
@@ -187,6 +253,17 @@
     </FoodItem>
     <FoodItem>
       <FoodID>16</FoodID>
+      <Name>Kenyér</Name>
+      <Description></Description>
+      <CategoryID>2</CategoryID>
+      <SubcategoryId>11</SubcategoryId>
+      <BestBefore />
+      <Unit>0</Unit>
+      <Measurement>dkg</Measurement>
+      <QuanityLeft>Semennyi</QuanityLeft>
+    </FoodItem>
+    <FoodItem>
+      <FoodID>17</FoodID>
       <Name>Szarvas</Name>
       <Description>Erdőből :)</Description>
       <CategoryID>4</CategoryID>
@@ -194,28 +271,6 @@
       <BestBefore />
       <Unit>0</Unit>
       <Measurement>kg</Measurement>
-      <QuanityLeft>Semennyi</QuanityLeft>
-    </FoodItem>
-    <FoodItem>
-      <FoodID>20</FoodID>
-      <Name>Asztali lazac</Name>
-      <Description />
-      <CategoryID>3</CategoryID>
-      <SubcategoryId>9</SubcategoryId>
-      <BestBefore />
-      <Unit>0</Unit>
-      <Measurement>kg</Measurement>
-      <QuanityLeft>Semennyi</QuanityLeft>
-    </FoodItem>
-    <FoodItem>
-      <FoodID>25</FoodID>
-      <Name>e</Name>
-      <Description></Description>
-      <CategoryID>1</CategoryID>
-      <SubcategoryId>4</SubcategoryId>
-      <BestBefore />
-      <Unit>0</Unit>
-      <Measurement>dkg</Measurement>
       <QuanityLeft>Semennyi</QuanityLeft>
     </FoodItem>
   </FoodItems>

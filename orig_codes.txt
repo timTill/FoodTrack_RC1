@@ -1150,3 +1150,20 @@ namespace FoodTracker.Areas.Admin.Controllers
     }
 }
 */
+
+
+ImpExpMan
+
+public void ImportXML()
+		{		
+			PortDBViewModel originalParsedXML = ParseXML(XMLFileDynamicPath);
+			PortDBViewModel normalizedXml = normalizeIDs(originalParsedXML);
+
+			/*
+			AddManyCategoriesFromParamToDBTest(normalizedXml.Categories);
+			AddManySubCategoriesFromParamToDBTest(normalizedXml.Subcategories);
+			AddManyFoodItemFromParamToDBTest(normalizedXml.Foods);
+			*/
+			SaveData(normalizedXml);
+		}
+		

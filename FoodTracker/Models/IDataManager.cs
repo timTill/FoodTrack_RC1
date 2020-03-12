@@ -6,5 +6,6 @@ namespace FoodTracker.Models
 	{
 		void ExportXML(PortDBViewModel input);
 		void ImportXML();
+		PortDBViewModel ImportFromDB();
 	}
 }
