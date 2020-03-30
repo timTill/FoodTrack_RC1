@@ -1,13 +1,4 @@
-﻿using FoodTracker.Data;
-using FoodTracker.Models;
-using FoodTracker.Models.RepositoryModules;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FoodTracker.Models
+﻿namespace FoodTracker.Models
 { }/*
 	public class SQLRepository : ISQLRepository
 	{

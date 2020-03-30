@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FoodTracker.Utility
+﻿namespace FoodTracker.Utility
 {
 	public static class SD
 	{

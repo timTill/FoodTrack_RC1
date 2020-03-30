@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using FoodTracker.Data;
 using FoodTracker.Models;
-using FoodTracker.Data;
-using Microsoft.EntityFrameworkCore;
+using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Diagnostics;
 using System.Security.Claims;
-using FoodTracker.Utility;
-using FoodTracker.Models.RepositoryModules;
+using System.Threading.Tasks;
 
 namespace FoodTracker.Controllers
 {

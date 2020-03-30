@@ -1,8 +1,5 @@
-﻿using FoodTracker.Models.RepositoryModules;
-using FoodTrackerTest.Test;
-using System;
+﻿using FoodTrackerTest.Test;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoodTracker.Models.MockRepo
@@ -22,10 +19,10 @@ namespace FoodTracker.Models.MockRepo
 			return null;
 		}
 
-		public Task<Category> DeleteCategory(TestCategory category)
+		public Category DeleteCategory(TestCategory category)
 		{
 			_mockRepo.Remove(category);
-			return null;
+			return category;
 		}
 
 		public IEnumerable<Category> GetAllCategories()

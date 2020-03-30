@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodTracker.Models
 {
 	public class ErrorViewModel

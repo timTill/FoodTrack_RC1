@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FoodTracker.Data;
+﻿using FoodTracker.Data;
 using FoodTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using FoodTracker.Extensions;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FoodTracker.Areas.Admin.Controllers

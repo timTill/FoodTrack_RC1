@@ -1,10 +1,7 @@
 ﻿using FoodTracker;
-using FoodTracker.Models;
 using FoodTracker.Models.ViewModels;
 using FoodTrackerTest.Test;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace FoodTrackerTest

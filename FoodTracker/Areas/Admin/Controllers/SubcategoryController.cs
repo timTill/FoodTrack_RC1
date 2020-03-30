@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FoodTracker.Data;
+﻿using FoodTracker.Data;
 using FoodTracker.Models;
 using FoodTracker.Models.RepositoryModules;
 using FoodTracker.Models.ViewModels;
-using FoodTracker.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FoodTracker.Areas.Admin.Controllers
 {
@@ -79,8 +77,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			return View(modelVM);
 		}
 
-		[Authorize]
-		//[ActionName("GetSubCategory")]
+		[Authorize]		
 		public async Task<IActionResult> GetSubCategory(int id)
 		{
 			IEnumerable<SubCategory> subCategories = await _repo.GetSubCategoryByCategory(id);
