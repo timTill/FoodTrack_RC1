@@ -9,7 +9,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 		public IActionResult ResourceNotFound()
 		{
 			Response.StatusCode = 404;
-			return View("ResourceNotFound"); //NotFound();
+			return View("ResourceNotFound");
 		}
 	}
 }

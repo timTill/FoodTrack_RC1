@@ -57,8 +57,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			if (ModelState.IsValid)
 			{			
 				if (await _repo.DoesSubCategoryExist(model.SubCategory))
-				{
-					//Error
+				{					
 					StatusMessage = "Error : Sub Category already exists. Please use another name.";
 				}
 				else
@@ -108,7 +107,6 @@ namespace FoodTracker.Areas.Admin.Controllers
 			return View(model);
 		}
 
-		//POST - EDIT
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = "Admin,Owner")]
@@ -120,7 +118,6 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 				if (doesSubCategoryExists)
 				{
-					//Error
 					StatusMessage = "Error : Sub Category exists. Please use another name.";
 				}
 				else

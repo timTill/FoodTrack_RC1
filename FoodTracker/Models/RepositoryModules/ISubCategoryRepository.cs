@@ -13,6 +13,5 @@ namespace FoodTracker.Models.RepositoryModules
 		Task<List<string>> GetAllDistinctSubCategories();
 		Task<bool> DoesSubCategoryExist(SubCategory subcategory);
 		Task<SubCategory> DeleteSubCategory(int id);
-
 	}
 }

@@ -1,5 +1,4 @@
-﻿//obsolete?
-using FoodTracker.Models.RepositoryModules;
+﻿using FoodTracker.Models.RepositoryModules;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -52,14 +51,9 @@ namespace FoodTracker.Models.MockRepo
 		}
 
 		public Task<Category> UpdateCategory(Category category)
-		{
-			/*
-			Category CategoryToUpdate = GetCategorySync(category.Id);
-			CategoryToUpdate.Name = category.Name;
-			*/
+		{			
 			_mockRepo[category.Id].Name = category.Name;
-			return null;
-			
+			return null;			
 		}
 	}
 }

@@ -11,13 +11,12 @@ namespace FoodTracker.Areas.User.Controllers
 	[Authorize]
 	[Area("User")]
 	public class ShoppingController : Controller
-    {
-		
+    {		
 		private readonly IUserFoodRepository _repo;
 
 		public ShoppingController (IUserFoodRepository repo)
 		{
-			this._repo = repo;
+			_repo = repo;
 		}
 
 		public string GetCurrentUserGUID()
@@ -34,9 +33,7 @@ namespace FoodTracker.Areas.User.Controllers
 			string userGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{			
-				FoodItem =await _repo.GetAllFoodTypeByOwner(userGUID),
-				/*FoodItem = await _db.Foods.Include(m => m.Category).
-						Include(m => m.SubCategory).Where(f=>f.OwnerName == userGUID).ToListAsync(),*/
+				FoodItem =await _repo.GetAllFoodTypeByOwner(userGUID),			
 				Category = _repo.GetAllCategories(),
 			};
 			return View(IndexVM);
@@ -60,7 +57,7 @@ namespace FoodTracker.Areas.User.Controllers
 			selectedFood.Description = food.Description;
 			selectedFood.QuantityLeft = food.QuantityLeft;
 			selectedFood.Unit = food.Unit;
-			selectedFood.IsInCart = false; //cart is ezt a fv-t használja, h onnan kikerüljön
+			selectedFood.IsInCart = false;
 
 			if (food.BestBefore != null && food.QuantityLeft != 0)
 			{

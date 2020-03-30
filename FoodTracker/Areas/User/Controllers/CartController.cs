@@ -20,7 +20,7 @@ namespace FoodTracker.Areas.User.Controllers
 		public CartController(ApplicationDbContext db, IUserFoodRepository repo)
 		{
 			_db = db;
-			this._repo = repo;
+			_repo = repo;
 		}
 
 		public string GetCurrentUserGUID()
@@ -36,9 +36,7 @@ namespace FoodTracker.Areas.User.Controllers
 			string userGUID = GetCurrentUserGUID();
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
-				FoodItem = await _repo.GetAllFoodInCartByOwner(userGUID),
-				/*FoodItem = await _db.Foods.Where(m => m.IsInCart== true).Include(m => m.Category).
-				Include(m => m.SubCategory).Where(f => f.OwnerName == userGUID).ToListAsync(),*/
+				FoodItem = await _repo.GetAllFoodInCartByOwner(userGUID),			
 				Category = await _db.Category.ToListAsync(),
 			};
 			return View(IndexVM);
@@ -51,8 +49,7 @@ namespace FoodTracker.Areas.User.Controllers
 			{
 				foodToCart.IsInCart = false;
 				await _db.SaveChangesAsync();
-			}
-			//else return BadRequest("Request error on removing fooditem from cart.");
+			}			
 			else return NotFound();
 			return RedirectToAction(nameof(Index));
 		}

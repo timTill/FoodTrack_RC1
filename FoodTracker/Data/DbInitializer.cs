@@ -15,17 +15,17 @@ namespace FoodTracker.Data
 
 		public DbInitializer(ApplicationDbContext db, UserManager<IdentityUser> usermanager, RoleManager<IdentityRole> roleManager)
 		{
-			this._db = db;
-			this._usermanager = usermanager;
-			this._roleManager = roleManager;
+			_db = db;
+			_usermanager = usermanager;
+			_roleManager = roleManager;
 		}
 		public async void Initialize()
 		{
 			try
 			{
-				if (this._db.Database.GetPendingMigrations().Count()>0)
+				if (_db.Database.GetPendingMigrations().Count()>0)
 				{
-					this._db.Database.Migrate();
+					_db.Database.Migrate();
 				}
 			}
 			catch (Exception ex)

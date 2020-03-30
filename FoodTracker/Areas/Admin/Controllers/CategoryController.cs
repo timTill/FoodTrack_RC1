@@ -14,7 +14,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 
 		public CategoryController(ICategoryRepository repo)
 		{
-			this._repo = repo;
+			_repo = repo;
 		}
 
 		[HttpGet]

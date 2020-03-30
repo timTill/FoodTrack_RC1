@@ -23,28 +23,19 @@ namespace FoodTracker.Models
 			_iconf = iconf;
 			XMLFileDynamicPath =
 				Path.Combine(env.WebRootPath, "Data", "Data.xml");
-		}
-		//private const string XMLinPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\DataToImport.xml";
+		}		
 		public void ExportXML(PortDBViewModel input)
-		{
-			//DumpDataToXML(input);
+		{		
 			XDocument xmlDocument = XMLSerializerFromDB(input);
 			string filename = "Data_" + DateTime.Now.ToShortDateString().Replace('.', '_').Replace(' ', '_') + ".xml";
 			string XMLFileToExport = Path.Combine(env.WebRootPath, "Data", filename);
 			xmlDocument.Save(XMLFileToExport);
-
 		}
 
 		public void ImportXML()
 		{		
 			PortDBViewModel originalParsedXML = ParseXML(XMLFileDynamicPath);
-			PortDBViewModel normalizedXml = normalizeIDs(originalParsedXML);
-
-			/*
-			AddManyCategoriesFromParamToDBTest(normalizedXml.Categories);
-			AddManySubCategoriesFromParamToDBTest(normalizedXml.Subcategories);
-			AddManyFoodItemFromParamToDBTest(normalizedXml.Foods);
-			*/
+			PortDBViewModel normalizedXml = normalizeIDs(originalParsedXML);			
 			SaveData(normalizedXml);
 		}
 
@@ -85,35 +76,7 @@ namespace FoodTracker.Models
 				};
 				return DB_VM;
 			}
-		}
-		/*
-		private void AddManyCategoriesFromParamToDBTest(IEnumerable<Category> categList)
-		{
-			using (var context = new ImpExpDBContext(_iconf))
-			{
-				context.Category.AddRange(categList);
-				context.SaveChanges();
-			}
-		}
-
-		private void AddManySubCategoriesFromParamToDBTest(IEnumerable<SubCategory> subcategList)
-		{
-			using (var context = new ImpExpDBContext(_iconf))
-			{
-				context.SubCategory.AddRange(subcategList);
-				context.SaveChanges();
-			}
-		}
-
-		private void AddManyFoodItemFromParamToDBTest(IEnumerable<Food> foodList)
-		{
-			using (var context = new ImpExpDBContext(_iconf))
-			{
-				context.Foods.AddRange(foodList);
-				context.SaveChanges();
-			}
-		}
-		*/
+		}		
 		public XDocument XMLSerializerFromDB(PortDBViewModel DB_VM)
 		{
 			XDocument xmlDocument = new XDocument(
@@ -143,10 +106,7 @@ namespace FoodTracker.Models
 								new XElement("Name", foodItem.Name),
 								new XElement("Description", foodItem.Description),
 								new XElement("CategoryID", foodItem.CategoryId),
-								new XElement("SubcategoryId", foodItem.SubCategoryId),
-								//new XElement("BestBefore", null),
-								new XElement("BestBefore", foodItem.BestBefore),
-								//new XElement("Unit", 0),
+								new XElement("SubcategoryId", foodItem.SubCategoryId),								new XElement("BestBefore", foodItem.BestBefore),
 								new XElement("Unit", foodItem.Unit),
 								new XElement("Measurement", foodItem.Measurement),
 								new XElement("QuanityLeft", foodItem.QuantityLeft)
@@ -268,20 +228,21 @@ namespace FoodTracker.Models
 														 CategoryId = (int)s.Element("CategoryID")
 													 };
 
-			IEnumerable<Food> Foods = from f in doc.Descendants("FoodItem")
-									  select new Food()
-									  {
-										  ID = (int)f.Element("FoodID"),
-										  Name = (string)f.Element("Name"),
-										  Description = (string)f.Element("Description"),
-										  CategoryId = (int)f.Element("CategoryID"),
-										  SubCategoryId = (int)f.Element("SubcategoryId"),
-										  BestBefore = string.IsNullOrEmpty((string)f.Element("BestBefore")) ? (DateTime?)null : (DateTime)f.Element("BestBefore"),
-										  Unit = (int)f.Element("Unit"),
-										  QuantityLeft = Enum.Parse<QuantityLeft>((string)f.Element("QuanityLeft")),
-										  Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement")),
-										  OwnerName = SD.userGUID
-									  };
+			IEnumerable<Food> Foods =
+				from f in doc.Descendants("FoodItem")
+				select new Food()
+				{
+					ID = (int)f.Element("FoodID"),
+					Name = (string)f.Element("Name"),
+					Description = (string)f.Element("Description"),
+					CategoryId = (int)f.Element("CategoryID"),
+					SubCategoryId = (int)f.Element("SubcategoryId"),
+					BestBefore = string.IsNullOrEmpty((string)f.Element("BestBefore")) ? (DateTime?)null : (DateTime)f.Element("BestBefore"),
+					Unit = (int)f.Element("Unit"),
+					QuantityLeft = Enum.Parse<QuantityLeft>((string)f.Element("QuanityLeft")),
+					Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement")),
+					OwnerName = SD.userGUID
+				};
 
 			DB_VM.Categories = categories;
 			DB_VM.Subcategories = subCategories;

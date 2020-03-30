@@ -1,11 +1,9 @@
 ﻿using FoodTracker.Data;
 using FoodTracker.Models;
 using FoodTracker.Models.ViewModels;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace FoodTracker
@@ -15,41 +13,42 @@ namespace FoodTracker
 		public const string XMLinPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\DataToImport.xml";
 		public const string XMLoutPath = @"C:\Users\Szabolcs\Source\Repos\FoodTracker\FoodTracker\FoodTracker\Port\DataToDB.xml";
 
-
-
 		public static PortDBViewModel ParseXML(string XMLPath)
 		{
 			PortDBViewModel DB_VM = new PortDBViewModel();
 
 			XDocument doc = XDocument.Load(XMLPath);
-			IEnumerable<Category> categories = from c in doc.Descendants("Category")
-											   select new Category()
-											   {
-												   Id = (int)c.Element("CategoryID"),
-												   Name = (string)c.Element("Name")
-											   };
+			IEnumerable<Category> categories =
+				from c in doc.Descendants("Category")
+				select new Category()
+				{
+					Id = (int)c.Element("CategoryID"),
+					Name = (string)c.Element("Name")
+				};
 
-			IEnumerable<SubCategory> subCategories = from s in doc.Descendants("Subcategory")
-													 select new SubCategory()
-													 {
-														 Id = (int)s.Element("SubcategoryID"),
-														 Name = (string)s.Element("Name"),
-														 CategoryId = (int)s.Element("CategoryID")
-													 };
+			IEnumerable<SubCategory> subCategories =
+				from s in doc.Descendants("Subcategory")
+				select new SubCategory()
+				{
+					Id = (int)s.Element("SubcategoryID"),
+					Name = (string)s.Element("Name"),
+					CategoryId = (int)s.Element("CategoryID")
+				};
 
-			IEnumerable<Food> Foods = from f in doc.Descendants("FoodItem")
-									  select new Food()
-									  {
-										  ID = (int)f.Element("FoodID"),
-										  Name = (string)f.Element("Name"),
-										  Description = (string)f.Element("Description"),
-										  CategoryId = (int)f.Element("CategoryID"),
-										  SubCategoryId = (int)f.Element("SubcategoryId"),
-										  BestBefore = string.IsNullOrEmpty((string)f.Element("BestBefore")) ? (DateTime?)null : (DateTime)f.Element("BestBefore"),
-										  Unit = (int)f.Element("Unit"),
-										  QuantityLeft = Enum.Parse<QuantityLeft>((string)f.Element("QuanityLeft")),
-										  Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement"))
-									  };
+			IEnumerable<Food> Foods =
+				from f in doc.Descendants("FoodItem")
+				select new Food()
+				{
+					ID = (int)f.Element("FoodID"),
+					Name = (string)f.Element("Name"),
+					Description = (string)f.Element("Description"),
+					CategoryId = (int)f.Element("CategoryID"),
+					SubCategoryId = (int)f.Element("SubcategoryId"),
+					BestBefore = string.IsNullOrEmpty((string)f.Element("BestBefore")) ? (DateTime?)null : (DateTime)f.Element("BestBefore"),
+					Unit = (int)f.Element("Unit"),
+					QuantityLeft = Enum.Parse<QuantityLeft>((string)f.Element("QuanityLeft")),
+					Measurement = Enum.Parse<MeasType>((string)f.Element("Measurement"))
+				};
 
 			DB_VM.Categories = categories;
 			DB_VM.Subcategories = subCategories;

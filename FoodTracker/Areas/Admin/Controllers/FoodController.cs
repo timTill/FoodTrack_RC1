@@ -50,7 +50,6 @@ namespace FoodTracker.Areas.Admin.Controllers
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 			SD.userGUID = claim.Value;
 			foodModel.Food.OwnerName = SD.userGUID;
-			//foodModel.Food.BestBefore = DateTime.Now;
 			ModelState.Remove("Food.OwnerName");
 			if (!ModelState.IsValid)
 			{
@@ -58,9 +57,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			}
 
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
-
 			await _repo.AddFood(foodModel.Food);
-
 			return RedirectToAction(nameof(Index), "Home", new { area = "User" });
 		}
 
@@ -91,9 +88,7 @@ namespace FoodTracker.Areas.Admin.Controllers
 			}
 			foodModel.Food.CategoryId = Convert.ToInt32(Request.Form["CategoryId"].ToString());
 			foodModel.Food.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"].ToString());
-
 			foodModel.Food.ID = (int)id;
-
 			await _repo.UpdateFood(foodModel.Food);
 			return RedirectToAction(nameof(Index));
 		}

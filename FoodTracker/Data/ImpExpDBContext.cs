@@ -7,10 +7,6 @@ namespace FoodTracker.Data
 	public class ImpExpDBContext : DbContext
 	{
 		private readonly IConfiguration iconf;
-
-
-		/*public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)*/
 		public ImpExpDBContext(IConfiguration iconf)
 		{			
 			this.iconf = iconf;
@@ -26,13 +22,9 @@ namespace FoodTracker.Data
 		public DbSet<Food> Foods { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			//var builder = new SqlConnectionStringBuilder(iservcoll.GetConnectionString())
-			
-			string connectionString = iconf.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
-			//optionsBuilder.UseSqlServer("Data Source=localhost\\SZABSQL;Initial Catalog=FT_TestImpExp_Serv;Persist Security Info=True;User ID=szabi;Password=sqlpassword");			
+		{	
+			string connectionString = iconf.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;			
 			optionsBuilder.UseSqlServer(connectionString);
 		}
 	}
 }
-

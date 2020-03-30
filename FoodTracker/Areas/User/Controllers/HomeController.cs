@@ -38,7 +38,7 @@ namespace FoodTracker.Controllers
 			IndexViewModel IndexVM = new IndexViewModel()
 			{
 				FoodItem = await _repo.GetAllRealFoodByOwner(UserGUID),
-				Category = _repo.GetAllCategories(),//_db.Category.ToListAsync(),
+				Category = _repo.GetAllCategories(),
 			};
 			return View(IndexVM);
 		}
@@ -56,12 +56,12 @@ namespace FoodTracker.Controllers
 		{
 			if (id != null)
 			{
-				Food foodToNull = await _repo.GetFood(id);//_db.Foods.FindAsync(id);
+				Food foodToNull = await _repo.GetFood(id);
 				foodToNull.BestBefore = null;
 				foodToNull.QuantityLeft = 0;
 				foodToNull.Description = String.Empty;
 				foodToNull.Unit = 0;
-				_repo.SaveDB(); //_db.SaveChangesAsync();
+				_repo.SaveDB();
 			}
 			return RedirectToAction(nameof(Index));
 		}
@@ -70,8 +70,7 @@ namespace FoodTracker.Controllers
 		{
 			if (id != null)
 			{
-				Food foodToConfirm = await _repo.GetFood(id);
-					//await _db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+				Food foodToConfirm = await _repo.GetFood(id);					
 				if (foodToConfirm != null)
 				{
 					return View(foodToConfirm);
@@ -82,8 +81,7 @@ namespace FoodTracker.Controllers
 
 		public async Task<IActionResult> UpdateStock(int? id)
 		{
-			Food food = await _repo.GetFood(id);
-			//_db.Foods.Where(f => f.ID == id).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+			Food food = await _repo.GetFood(id);			
 			if (food == null)
 				return NotFound();
 			return View(food);
@@ -95,13 +93,12 @@ namespace FoodTracker.Controllers
 		{
 			if (food != null)
 			{
-				Food newFood = await _repo.GetFood(food.ID);
-				//_db.Foods.Where(f => f.ID == food.ID).Include(f => f.SubCategory.Category).FirstOrDefaultAsync();
+				Food newFood = await _repo.GetFood(food.ID);				
 				newFood.Description = food.Description;
 				newFood.BestBefore = food.BestBefore;
 				newFood.QuantityLeft = food.QuantityLeft;
 				newFood.Unit = food.Unit;
-				_repo.SaveDB(); //_db.SaveChangesAsync();
+				_repo.SaveDB();
 			}
 			return RedirectToAction(nameof(Index));
 		}
