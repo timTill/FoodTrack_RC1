@@ -24,7 +24,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-appsettings.json
+FoodTracker/appsettings.json
+**/PublishProfiles/
 
 # Visual Studio 2015 cache/options directory
 .vs/
