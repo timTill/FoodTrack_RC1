@@ -2,13 +2,15 @@
 using FoodTracker.Models;
 using FoodTracker.Models.ViewModels;
 using FoodTracker.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FoodTracker.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-    public class DataController : Controller
+	[Authorize(Roles = "Admin")]
+	public class DataController : Controller
     {
 		private readonly ApplicationDbContext applicationDbContext;
 		private readonly IDataManager ImpExpMan;
