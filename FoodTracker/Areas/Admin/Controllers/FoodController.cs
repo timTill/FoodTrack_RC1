@@ -13,12 +13,21 @@ namespace FoodTracker.Areas.Admin.Controllers
 	[Area("Admin")]
 	public class FoodController : Controller
 	{
-		private readonly IFoodRepository _repo;
+		private readonly IUserFoodRepository _repo;
 
 		[BindProperty]
 		public FoodViewModel foodModel { get; set; }
 
-		public FoodController(IFoodRepository repo)
+		public string GetCurrentUserGUID()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var userGUID = claim.Value;
+			return userGUID;
+		}
+
+
+		public FoodController(IUserFoodRepository repo)
 		{			
 			this._repo = repo;
 
@@ -32,7 +41,8 @@ namespace FoodTracker.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			var foods = await _repo.GetAllFood();
+			string userGUID = GetCurrentUserGUID();
+			var foods = await _repo.GetAllFoodTypeByOwner(userGUID);
 			return View(foods);
 		}
 

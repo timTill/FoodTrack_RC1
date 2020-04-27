@@ -1,0 +1,26 @@
+16th of April 2020:
+
+Since v1.0. the following changes have been made:
+
+- removal of publishprofile folder and  appsettings.json file from GitHub tracking
+
+Feature:
+	- test environment refinement:
+		- only admin role can perform data/import and export function for function separation concerns.
+		- Entitlement is checked on View and Controller level.
+		- "migrator" account is created at initilizing phase and cannot create a new one via application.
+	UI changes:
+		- Visual feedback on item in cart or notOn
+			On Foods page
+				- if an item is already in the Cart a tick is shown with deactivated anchor tag.
+				- else a green cart icon is visible
+			
+		- indication of currently active page.
+			- users now can see from the menu on which site they are at currently.
+			- Only the selected menu is in active button state
+		- other slight modifications:
+			- UI Footer changed to "2019 - 2020   food-tracker.net"
+	- Mi: FontAwesome icons added to all main menus
+
+Bugfix:
+	Security: Admin/DataController and its action methods have received authorization attributes

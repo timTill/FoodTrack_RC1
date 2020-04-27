@@ -1,6 +1,6 @@
 ﻿@model Food
 @{
-	ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create FoodType";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -18,7 +18,7 @@
 						<label asp-for="Name" class="custom-label"></label>
 					</div>
 					<div class="col-8">
-						<input asp-for="Name" class="form-control" />
+						<input asp-for="Name" class="form-control"/>
 					</div>
 				</div>
 			</fieldset>
@@ -56,7 +56,7 @@
 					<label asp-for="Description" class="custom-label"></label>
 				</div>
 				<div class="col-8">
-					<input asp-for="Description" class="form-control" />					
+					<input asp-for="Description" class="form-control" autofocus/>					
 				</div>
 			</div>
 		</div>

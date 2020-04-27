@@ -1,0 +1,18 @@
+FoodTracker v 1.1.5. - 17th of April 2020
+
+Since version 1.1. the following changes have been made:
+
+Infrastructure:
+	- OutOfProcess webhosting solves deploy  error 500.35 (one AppPool, multiple applications)	
+	- establishing baseline (constant 1.0) and remote development and production environments
+
+Feature:
+	
+	UI changes:
+		responsive UI design:
+		- Manage account + Register + logout goes under my account
+		- User management put under manage
+		- browser tab shows current page action (e.g. "Cart - FoodTracker")
+	Content:
+		new menu: help (controller and view)
+			- release notes section with downloadable txt files.

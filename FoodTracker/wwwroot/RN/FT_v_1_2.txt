@@ -1,0 +1,37 @@
+24th April 2020
+
+Version 1.2.
+
+Since pervious version - 1.1.5 - the following changes have been made:
+
+Feature:
+	- Environment-dependent templates on browser tab and  current version display
+	- Downloadable release notes from website
+	
+Infrastructure:
+	Resolving v1.1. compatibility issue of admin role with new DB and data seeding.
+	- Export function did not work on hosting environment
+	- discovering and fixing wrong file name encoding
+	- nlog log-out path is relative and deploy-independent
+
+Bugfix:	
+	- Subcategory/edit category type was in disable (non-modifiable)
+	- UI visibility fix:
+		Manage/Users should appear only to owner not to admin
+
+UX:
+	- Create és Edit View with autofocus to the first enabled field on the screen
+		- Category
+		- Subcategory
+		- Food
+	- Redirect to Login after successful log-out
+		- 3 sec delay and relative (deploy independent) URL routing
+	- Login page:
+		- "Login" button deleted from navbar
+		- Deleting search option
+
+Under the hood:
+	- Introduction of name convention on RNs for easier retrieval
+	
+Tiny mods:
+	- new icons on UI

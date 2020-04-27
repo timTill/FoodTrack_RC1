@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SubCategory>
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Subcategory Index";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <br /><br />
@@ -10,8 +10,8 @@
 			<h2 class="text-info"> Sub Category List</h2>
 		</div>
 		<div class="col-6 text-right">
-			<a asp-action="Create" asp-area="Admin" asp-controller="Subcategory" class="btn btn-info">
-				<i class="fas fa-plus"></i> &nbsp;  Create New Subcategory
+			<a title="Create New Subcategory" asp-action="Create" asp-area="Admin" asp-controller="Subcategory" class="btn btn-info">
+				<i class="fas fa-plus"></i> 
 			</a>
 		</div>
 	</div>

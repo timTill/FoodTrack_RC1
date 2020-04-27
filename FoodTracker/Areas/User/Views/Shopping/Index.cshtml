@@ -1,13 +1,13 @@
 ﻿@model FoodTracker.Models.ViewModels.IndexViewModel
+@{
+	ViewData["Title"] = "All Items";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <br />
-
 <div class="backgroundWhite container p-0">
 
-	<div class="row mb-2">
-		<div class="col-6">
-			<h3 class="text-info">Foods</h3>
-		</div>
-		<div class="col-6 text-right">
+	<div class="row mb-2">		
+		<div class="col-12 text-right">
 			<partial name="_CreateButtonPartial" />
 		</div>
 	</div>
@@ -21,7 +21,7 @@
 
 	@if (Model.FoodItem.Count() == 0)
 	{
-	<h3 class="text-info text-center p-5">Nothing to display</h3>
+		<h3 class="text-info text-center p-5">Nothing to display</h3>
 	}
 
 	@foreach (var category in Model.Category)
@@ -37,6 +37,10 @@
 			integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
 			crossorigin="anonymous"></script>
 	<script>
+		$(document).ready(function () {
+			$("#FoodsMenuId").addClass("active");
+		});
+
 		var posts = $('.post');
 		(function ($) {
 			$("#menu-filters li").click(function () {
@@ -48,5 +52,6 @@
 					$(selectedFilter).slideDown();
 				}, 300);
 			});
-		})(jQuery);</script>
+		})(jQuery);
+	</script>
 }

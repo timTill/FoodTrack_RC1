@@ -1,0 +1,6 @@
+24th April 2020
+
+Version 1.2.1 (hotfix)
+
+Security Fix:
+- Data leak on Manage/FoodType is resolved

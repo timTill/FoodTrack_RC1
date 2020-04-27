@@ -1,7 +1,7 @@
 ﻿@model FoodTracker.Models.ViewModels.FoodViewModel
 @using FoodTracker.Extensions
 @{
-	ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create FoodItem";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <br />
@@ -15,7 +15,7 @@
 			<label asp-for="Food.Name" class="col-form-label"></label>
 		</div>
 		<div class="col-5">
-			<input asp-for="Food.Name" class="form-control" placeholder="Name" />
+			<input asp-for="Food.Name" class="form-control" placeholder="Name" autofocus/>
 			<span asp-validation-for="Food.Name" class="text-danger"></span>
 		</div>		
 	</div>

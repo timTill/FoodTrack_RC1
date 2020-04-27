@@ -26,8 +26,8 @@ namespace FoodTracker.Models
 		}		
 		public void ExportXML(PortDBViewModel input)
 		{		
-			XDocument xmlDocument = XMLSerializerFromDB(input);
-			string filename = "Data_" + DateTime.Now.ToShortDateString().Replace('.', '_').Replace(' ', '_') + ".xml";
+			XDocument xmlDocument = XMLSerializerFromDB(input);			
+			string filename = "Data_" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + ".xml";			
 			string XMLFileToExport = Path.Combine(env.WebRootPath, "Data", filename);
 			xmlDocument.Save(XMLFileToExport);
 		}

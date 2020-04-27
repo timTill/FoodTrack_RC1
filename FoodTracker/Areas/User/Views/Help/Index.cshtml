@@ -1,0 +1,59 @@
+﻿@using FoodTracker.Utility
+@{
+	ViewData["Title"] = "Help";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class=" backgroundWhite">
+	<div class="row">
+		<div class="col-6">
+			<h2 class="text-dark"> Help</h2>
+		</div>
+		<div class="col-6 text-right">
+		</div>
+	</div>
+	<br />
+
+	<h3 class="text-dark">Current Version</h3>
+	<ul style="list-style-type:none;">
+		<li>
+			<a class="text-dark underline">@SD.appVersion</a>
+		</li>
+	</ul>
+
+	<h3 class="text-dark">Release Notes</h3>
+	<ul style="list-style-type:none;">
+		@foreach (var RN in SD.RNList)
+		{
+			<li>
+				<a class="text-dark underline" href="~/RN/@($"FT_v_{RN}.txt") " download><u>Version @RN.Replace('_','.').</u></a>
+			</li>
+
+		}		
+	</ul>
+
+	@*
+		<ul style="list-style-type:none;">
+			<li>
+				<a class="text-dark underline" href="~/RN/FT_v_1_1_5.txt" download><u>Version 1.1.5</u></a>
+			</li>
+			<li>
+				<a class="text-dark underline" href="~/RN/FT_v_1_1.txt" download><u>Version 1.1</u></a>
+			</li>
+		</ul>
+	*@
+
+
+
+</div>
+
+	@section Scripts{
+		<script src="https://code.jquery.com/jquery-3.3.1.js"
+				integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+				crossorigin="anonymous"></script>
+		<script>
+			$(document).ready(function () {
+				$("#HelpMenuId").addClass("active");
+			});
+		</script>
+	}

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<ApplicationUser>
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "User Listing";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <br /><br />
@@ -10,8 +10,10 @@
 			<h2 class="text-info"> Users List</h2>
 		</div>
 		<div class="col-6 text-right">
-			<a asp-area="Identity" asp-page="/Account/Register" class="btn btn-info"><i class="fas fa-plus">
-					</i> &nbsp; New User Registration</a>
+			<a asp-area="Identity" asp-page="/Account/Register" class="btn btn-info">
+				<i class="fas fa-plus">
+				</i> &nbsp; New User Registration
+			</a>
 		</div>
 	</div>
 	<br />
@@ -68,3 +70,14 @@
 		}
 	</div>
 </div>
+
+@section Scripts{
+	<script src="https://code.jquery.com/jquery-3.3.1.js"
+			integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function () {
+			$("#UsersMenuId").addClass("active");
+			});
+	</script>
+}

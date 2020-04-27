@@ -1,4 +1,10 @@
 ﻿@model FoodTracker.Models.ViewModels.IndexViewModel
+@{
+	ViewData["Title"] = "Cart";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
 <br />
 
 <div class="backgroundWhite container">
@@ -14,8 +20,8 @@
 
 	@if (Model.FoodItem.Count() == 0)
 	{
-	<h3 class="text-info text-center p-5">The cart is empty</h3>
-		
+		<h3 class="text-info text-center p-5">The cart is empty</h3>
+
 	}
 
 	@foreach (var category in Model.Category)
@@ -31,6 +37,9 @@
 			integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
 			crossorigin="anonymous"></script>
 	<script>
+		$(document).ready(function () {
+			$("#CartId").addClass("active");
+		});
 		var posts = $('.post');
 		(function ($) {
 			$("#menu-filters li").click(function () {
@@ -44,4 +53,3 @@
 			});
 		})(jQuery);</script>
 }
-
